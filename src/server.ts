@@ -168,14 +168,14 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
   console.log('');
   console.log('╔════════════════════════════════════════════════════════╗');
-  console.log('║     GitHub Trending Extractor - Local Test Server     ║');
+  console.log('║     GitHub Trending Extractor - Local Test Server      ║');
   console.log('╠════════════════════════════════════════════════════════╣');
-  console.log(`║  🌐 Web Interface: http://localhost:${PORT}/           ║`);
+  console.log(`║  🌐 Web Interface: http://localhost:${PORT}/             ║`);
   console.log('╠════════════════════════════════════════════════════════╣');
   console.log('║  📡 API Endpoints:                                     ║');
-  console.log(`║     • GET http://localhost:${PORT}/api/trending        ║`);
-  console.log(`║     • GET http://localhost:${PORT}/api/repositories    ║`);
-  console.log(`║     • GET http://localhost:${PORT}/api/statistics      ║`);
+  console.log(`║     • GET http://localhost:${PORT}/api/trending          ║`);
+  console.log(`║     • GET http://localhost:${PORT}/api/repositories      ║`);
+  console.log(`║     • GET http://localhost:${PORT}/api/statistics        ║`);
   console.log('╠════════════════════════════════════════════════════════╣');
   console.log('║  Parameters:                                           ║');
   console.log('║     • since=daily|weekly|monthly                       ║');
