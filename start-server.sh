@@ -2,46 +2,46 @@
 
 echo ""
 echo "╔════════════════════════════════════════════════════════╗"
-echo "║     GitHub Trending 提取工具 - 启动器                  ║"
+echo "║     GitHub Trending Extractor - Launcher               ║"
 echo "╚════════════════════════════════════════════════════════╝"
 echo ""
 
-# 颜色定义
+# Color definitions
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
-# 检查 node_modules 是否存在
+# Check if node_modules exists
 if [ ! -d "node_modules" ]; then
-    echo -e "${YELLOW}[INFO] 首次运行，正在安装依赖...${NC}"
+    echo -e "${YELLOW}[INFO] First run, installing dependencies...${NC}"
     npm install
     if [ $? -ne 0 ]; then
-        echo -e "${RED}[ERROR] 依赖安装失败${NC}"
+        echo -e "${RED}[ERROR] Failed to install dependencies${NC}"
         exit 1
     fi
 fi
 
-# 检查是否已编译
+# Check if compiled
 if [ ! -f "dist/index.js" ]; then
-    echo -e "${YELLOW}[INFO] 首次运行，正在编译项目...${NC}"
+    echo -e "${YELLOW}[INFO] First run, building project...${NC}"
     npm run build
     if [ $? -ne 0 ]; then
-        echo -e "${RED}[ERROR] 编译失败${NC}"
+        echo -e "${RED}[ERROR] Build failed${NC}"
         exit 1
     fi
 fi
 
-echo -e "${GREEN}[INFO] 正在启动 Web 测试服务器...${NC}"
-echo -e "${GREEN}[INFO] 请稍候...${NC}"
+echo -e "${GREEN}[INFO] Starting Web test server...${NC}"
+echo -e "${GREEN}[INFO] Please wait...${NC}"
 echo ""
 
-# 启动服务器
+# Start server
 npm run server
 
-# 如果服务器异常退出
+# If server exits abnormally
 if [ $? -ne 0 ]; then
     echo ""
-    echo -e "${RED}[ERROR] 服务器异常退出${NC}"
-    read -p "按回车键退出..."
+    echo -e "${RED}[ERROR] Server exited abnormally${NC}"
+    read -p "Press Enter to exit..."
 fi

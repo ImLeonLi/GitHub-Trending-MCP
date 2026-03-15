@@ -1,6 +1,6 @@
 {
   "name": "github-trending-extractor",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "GitHub Trending 页面内容提取工具，支持 MCP Server 和 WorkBuddy Skill",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,7 +21,7 @@
     "scraper"
   ],
   "author": "",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
     "axios": "^1.7.9",
