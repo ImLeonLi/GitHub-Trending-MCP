@@ -1,0 +1,35 @@
+{
+  "name": "github-trending-extractor",
+  "version": "1.0.0",
+  "description": "GitHub Trending 页面内容提取工具，支持 MCP Server 和 WorkBuddy Skill",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "mcp-server": "ts-node src/mcp-server.ts",
+    "start": "node dist/index.js",
+    "server": "ts-node src/server.ts",
+    "server:prod": "node dist/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "github",
+    "trending",
+    "mcp",
+    "skill",
+    "scraper"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "axios": "^1.7.9",
+    "cheerio": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  }
+}
