@@ -1,5 +1,7 @@
 # GitHub Trending Extractor
 
+[中文版本](README_CN.md) | [English Version](README.md)
+
 GitHub Trending 页面内容提取工具，支持多种筛选参数，可封装为 MCP Server 和 WorkBuddy Skill。
 
 ## 功能特性

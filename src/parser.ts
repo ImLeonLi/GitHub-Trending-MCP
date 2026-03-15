@@ -1,6 +1,6 @@
 /**
- * HTML 解析模块
- * 使用 cheerio 解析 GitHub Trending 页面，提取结构化数据
+ * HTML parsing module
+ * Uses cheerio to parse GitHub Trending page and extract structured data
  */
 
 import * as cheerio from 'cheerio';
@@ -14,21 +14,21 @@ import {
 } from './types';
 
 /**
- * 将带千分位的数字字符串转换为纯整数
- * @param numStr 数字字符串，如 "32,458"
- * @returns 纯整数，如 32458
+ * Convert number string with thousand separators to integer
+ * @param numStr Number string, e.g. "32,458"
+ * @returns Integer, e.g. 32458
  */
 function parseNumber(numStr: string): number {
   if (!numStr) return 0;
-  // 移除所有非数字字符（包括千分位逗号、空格等）
+  // Remove all non-digit characters (including thousand separators, spaces, etc.)
   const cleaned = numStr.replace(/[^\d]/g, '');
   return parseInt(cleaned, 10) || 0;
 }
 
 /**
- * 提取今日新增 stars 的数量
- * @param text 原始文本，如 "2,149 stars today"
- * @returns 纯整数
+ * Extract stars gained today
+ * @param text Original text, e.g. "2,149 stars today"
+ * @returns Integer
  */
 function parseStarsToday(text: string): number {
   if (!text) return 0;
@@ -40,16 +40,16 @@ function parseStarsToday(text: string): number {
 }
 
 /**
- * 解析单个仓库元素
- * @param $ cheerio 实例
- * @param element 仓库 article 元素
- * @returns 仓库信息对象
+ * Parse single repository element
+ * @param $ cheerio instance
+ * @param element Repository article element
+ * @returns Repository information object
  */
 function parseRepository($: cheerio.CheerioAPI, element: any): TrendingRepository | null {
   const $article = $(element);
 
   try {
-    // 提取仓库名称和链接
+    // Extract repository name and link
     const $titleLink = $article.find('h2 a[href^="/"]');
     if ($titleLink.length === 0) {
       return null;
@@ -57,18 +57,18 @@ function parseRepository($: cheerio.CheerioAPI, element: any): TrendingRepositor
 
     const href = $titleLink.attr('href') || '';
     const fullName = $titleLink.text().trim().replace(/\s+/g, ' ');
-    // 清理名称，移除多余空格和换行
+    // Clean name, remove extra spaces and newlines
     const name = fullName.replace(/\n/g, '').replace(/\s+/g, ' ').trim();
 
-    // 提取描述
+    // Extract description
     const $description = $article.find('p[class*="color-fg-muted"]');
     const description = $description.text().trim();
 
-    // 提取编程语言
+    // Extract programming language
     const $language = $article.find('[itemprop="programmingLanguage"]');
     const language = $language.text().trim();
 
-    // 提取 Stars 数量和链接
+    // Extract Stars count and link
     const $starsLink = $article.find('a[href$="/stargazers"]');
     const starsText = $starsLink.text().trim();
     const stars = parseNumber(starsText);
@@ -76,7 +76,7 @@ function parseRepository($: cheerio.CheerioAPI, element: any): TrendingRepositor
       ? `https://github.com${$starsLink.attr('href')}` 
       : `https://github.com${href}/stargazers`;
 
-    // 提取 Forks 数量和链接
+    // Extract Forks count and link
     const $forksLink = $article.find('a[href$="/forks"]');
     const forksText = $forksLink.text().trim();
     const forks = parseNumber(forksText);
@@ -84,12 +84,12 @@ function parseRepository($: cheerio.CheerioAPI, element: any): TrendingRepositor
       ? `https://github.com${$forksLink.attr('href')}`
       : `https://github.com${href}/forks`;
 
-    // 提取今日新增 stars
+    // Extract stars gained today
     const $starsToday = $article.find('.float-sm-right, [class*="stars today"]');
     const starsTodayText = $starsToday.text().trim();
     const starsToday = parseStarsToday(starsTodayText);
 
-    // 提取贡献者列表
+    // Extract contributors list
     const contributors: Contributor[] = [];
     $article.find('img.avatar').each((_, img) => {
       const $img = $(img);
@@ -121,26 +121,26 @@ function parseRepository($: cheerio.CheerioAPI, element: any): TrendingRepositor
       starsTodayText
     };
   } catch (error) {
-    console.warn('解析仓库元素时出错:', error);
+    console.warn('Error parsing repository element:', error);
     return null;
   }
 }
 
 /**
- * 解析页面元数据
- * @param $ cheerio 实例
- * @param options 筛选选项
- * @returns 页面元数据
+ * Parse page metadata
+ * @param $ cheerio instance
+ * @param options Filter options
+ * @returns Page metadata
  */
 function parseMetadata($: cheerio.CheerioAPI, options: TrendingFilterOptions): TrendingMetadata {
-  // 提取页面标题 - 从 title 标签或页面头部
+  // Extract page title - from title tag or page header
   let title = 'Trending';
   const pageTitle = $('title').text().trim();
   if (pageTitle && pageTitle.includes('Trending')) {
     title = 'Trending';
   }
   
-  // 根据 since 参数构建描述
+  // Build description based on since parameter
   const sinceText = {
     'daily': 'today',
     'weekly': 'this week',
@@ -160,32 +160,32 @@ function parseMetadata($: cheerio.CheerioAPI, options: TrendingFilterOptions): T
 }
 
 /**
- * 解析 GitHub Trending 页面 HTML
- * @param html 页面 HTML 字符串
- * @param options 筛选选项（用于构建元数据）
- * @returns 解析结果，包含元数据和仓库列表
- * @throws TrendingScraperError 解析失败时抛出
+ * Parse GitHub Trending page HTML
+ * @param html Page HTML string
+ * @param options Filter options (for building metadata)
+ * @returns Parsing result, including metadata and repository list
+ * @throws TrendingScraperError When parsing fails
  */
 export function parseTrendingPage(html: string, options: TrendingFilterOptions = {}): TrendingResult {
   try {
     const $ = cheerio.load(html);
 
-    // 检查是否是有效的 GitHub 页面
+    // Check if it's a valid GitHub page
     if ($('article.Box-row').length === 0) {
-      // 检查是否是错误页面
+      // Check if it's an error page
       const errorText = $('h1, .blankslate h3').first().text().trim();
       if (errorText && (errorText.includes('404') || errorText.includes('Not Found'))) {
         throw new TrendingScraperError(
-          '页面未找到，请检查筛选参数是否正确',
+          'Page not found, please check if filter parameters are correct',
           'NOT_FOUND'
         );
       }
     }
 
-    // 解析元数据
+    // Parse metadata
     const metadata = parseMetadata($, options);
 
-    // 解析仓库列表
+    // Parse repository list
     const repositories: TrendingRepository[] = [];
     $('article.Box-row').each((_, element) => {
       const repo = parseRepository($, element);
@@ -194,9 +194,9 @@ export function parseTrendingPage(html: string, options: TrendingFilterOptions =
       }
     });
 
-    // 如果没有找到任何仓库，可能是页面结构变化
+    // If no repositories found, page structure may have changed
     if (repositories.length === 0) {
-      console.warn('警告: 未找到任何仓库，可能是页面结构发生变化');
+      console.warn('Warning: No repositories found, page structure may have changed');
     }
 
     return {
@@ -208,7 +208,7 @@ export function parseTrendingPage(html: string, options: TrendingFilterOptions =
       throw error;
     }
     throw new TrendingScraperError(
-      `解析页面失败: ${error instanceof Error ? error.message : String(error)}`,
+      `Failed to parse page: ${error instanceof Error ? error.message : String(error)}`,
       'PARSE_ERROR',
       error instanceof Error ? error : undefined
     );
@@ -216,9 +216,9 @@ export function parseTrendingPage(html: string, options: TrendingFilterOptions =
 }
 
 /**
- * 获取仓库数量统计
- * @param result 解析结果
- * @returns 统计信息
+ * Get repository statistics
+ * @param result Parsing result
+ * @returns Statistics information
  */
 export function getStatistics(result: TrendingResult): {
   total: number;
@@ -231,11 +231,11 @@ export function getStatistics(result: TrendingResult): {
   let totalForks = 0;
 
   for (const repo of result.repositories) {
-    // 统计语言
+    // Count languages
     if (repo.language) {
       languages[repo.language] = (languages[repo.language] || 0) + 1;
     }
-    // 统计 stars 和 forks
+    // Count stars and forks
     totalStars += repo.stars;
     totalForks += repo.forks;
   }

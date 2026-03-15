@@ -1,5 +1,7 @@
 # GitHub Trending Extractor
 
+[中文版本](README_CN.md) | [English Version](README.md)
+
 A powerful tool for scraping GitHub Trending repositories with multiple filter options. Supports MCP Server and WorkBuddy Skill integration.
 
 ## Features

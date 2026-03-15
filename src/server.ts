@@ -1,6 +1,6 @@
 /**
- * 本地测试服务器
- * 提供 Web 界面和 API 接口用于手工测试
+ * Local test server
+ * Provides web interface and API endpoints for manual testing
  */
 
 import * as http from 'http';
@@ -164,34 +164,34 @@ const server = http.createServer((req, res) => {
   });
 });
 
-// 启动服务器
+// Start server
 server.listen(PORT, () => {
   console.log('');
   console.log('╔════════════════════════════════════════════════════════╗');
-  console.log('║     GitHub Trending 提取工具 - 本地测试服务器          ║');
+  console.log('║     GitHub Trending Extractor - Local Test Server     ║');
   console.log('╠════════════════════════════════════════════════════════╣');
-  console.log(`║  🌐 Web 界面: http://localhost:${PORT}/                ║`);
+  console.log(`║  🌐 Web Interface: http://localhost:${PORT}/           ║`);
   console.log('╠════════════════════════════════════════════════════════╣');
-  console.log('║  📡 API 端点:                                          ║');
+  console.log('║  📡 API Endpoints:                                     ║');
   console.log(`║     • GET http://localhost:${PORT}/api/trending        ║`);
   console.log(`║     • GET http://localhost:${PORT}/api/repositories    ║`);
   console.log(`║     • GET http://localhost:${PORT}/api/statistics      ║`);
   console.log('╠════════════════════════════════════════════════════════╣');
-  console.log('║  参数:                                                 ║');
+  console.log('║  Parameters:                                           ║');
   console.log('║     • since=daily|weekly|monthly                       ║');
   console.log('║     • language=python|javascript|...                   ║');
   console.log('║     • spokenLanguageCode=en|zh|...                     ║');
   console.log('╠════════════════════════════════════════════════════════╣');
-  console.log('║  按 Ctrl+C 停止服务器                                  ║');
+  console.log('║  Press Ctrl+C to stop the server                       ║');
   console.log('╚════════════════════════════════════════════════════════╝');
   console.log('');
 });
 
-// 优雅关闭
+// Graceful shutdown
 process.on('SIGINT', () => {
-  console.log('\n\n👋 正在关闭服务器...');
+  console.log('\n\n👋 Shutting down server...');
   server.close(() => {
-    console.log('✅ 服务器已关闭');
+    console.log('✅ Server stopped');
     process.exit(0);
   });
 });
