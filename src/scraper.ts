@@ -1,6 +1,6 @@
 /**
- * 页面抓取模块
- * 负责构建 URL 和发送 HTTP 请求获取 GitHub Trending 页面
+ * Page scraping module
+ * Responsible for building URLs and sending HTTP requests to get GitHub Trending page
  */
 
 import axios, { AxiosError } from 'axios';
@@ -11,12 +11,12 @@ import {
 } from './types';
 
 /**
- * GitHub Trending 基础 URL
+ * GitHub Trending base URL
  */
 const GITHUB_TRENDING_BASE_URL = 'https://github.com/trending';
 
 /**
- * 默认请求头，模拟浏览器访问
+ * Default request headers, simulating browser access
  */
 const DEFAULT_HEADERS = {
   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -32,25 +32,25 @@ const DEFAULT_HEADERS = {
 };
 
 /**
- * 构建 GitHub Trending URL
- * @param options 筛选选项
- * @returns 完整的 URL 字符串
+ * Build GitHub Trending URL
+ * @param options Filter options
+ * @returns Complete URL string
  */
 export function buildTrendingUrl(options: TrendingFilterOptions = {}): string {
   const { since = 'daily', language, spokenLanguageCode } = options;
 
-  // 构建基础路径
+  // Build base path
   let url = GITHUB_TRENDING_BASE_URL;
   if (language) {
-    // 对语言名称进行 URL 编码，处理特殊字符如 C++
+    // URL encode language name to handle special characters like C++
     const encodedLanguage = encodeURIComponent(language);
     url += `/${encodedLanguage}`;
   }
 
-  // 构建查询参数
+  // Build query parameters
   const params = new URLSearchParams();
   
-  // since 参数映射
+  // since parameter mapping
   const sinceMap: Record<TimeRange, string> = {
     'daily': 'daily',
     'weekly': 'weekly',
@@ -72,10 +72,10 @@ export function buildTrendingUrl(options: TrendingFilterOptions = {}): string {
 }
 
 /**
- * 抓取 GitHub Trending 页面 HTML
- * @param options 筛选选项
- * @returns 页面 HTML 字符串
- * @throws TrendingScraperError 抓取失败时抛出
+ * Fetch GitHub Trending page HTML
+ * @param options Filter options
+ * @returns Page HTML string
+ * @throws TrendingScraperError When fetching fails
  */
 export async function fetchTrendingPage(options: TrendingFilterOptions = {}): Promise<string> {
   const url = buildTrendingUrl(options);
@@ -93,7 +93,7 @@ export async function fetchTrendingPage(options: TrendingFilterOptions = {}): Pr
     if (error instanceof AxiosError) {
       if (error.code === 'ECONNABORTED') {
         throw new TrendingScraperError(
-          '请求超时，请检查网络连接',
+          'Request timeout, please check network connection',
           'NETWORK_ERROR',
           error
         );
@@ -102,20 +102,20 @@ export async function fetchTrendingPage(options: TrendingFilterOptions = {}): Pr
         const status = error.response.status;
         if (status === 404) {
           throw new TrendingScraperError(
-            `页面未找到，请检查筛选参数是否正确: ${url}`,
+            `Page not found, please check if filter parameters are correct: ${url}`,
             'NOT_FOUND',
             error
           );
         }
         throw new TrendingScraperError(
-          `HTTP 错误 ${status}: ${error.message}`,
+          `HTTP error ${status}: ${error.message}`,
           'NETWORK_ERROR',
           error
         );
       }
       if (error.request) {
         throw new TrendingScraperError(
-          '网络请求失败，请检查网络连接',
+          'Network request failed, please check network connection',
           'NETWORK_ERROR',
           error
         );
@@ -123,7 +123,7 @@ export async function fetchTrendingPage(options: TrendingFilterOptions = {}): Pr
     }
     
     throw new TrendingScraperError(
-      `未知错误: ${error instanceof Error ? error.message : String(error)}`,
+      `Unknown error: ${error instanceof Error ? error.message : String(error)}`,
       'UNKNOWN_ERROR',
       error instanceof Error ? error : undefined
     );
@@ -131,9 +131,9 @@ export async function fetchTrendingPage(options: TrendingFilterOptions = {}): Pr
 }
 
 /**
- * 获取当前使用的请求配置（用于调试）
- * @param options 筛选选项
- * @returns 请求配置信息
+ * Get current request configuration (for debugging)
+ * @param options Filter options
+ * @returns Request configuration information
  */
 export function getRequestConfig(options: TrendingFilterOptions = {}) {
   return {
@@ -144,32 +144,32 @@ export function getRequestConfig(options: TrendingFilterOptions = {}) {
 }
 
 /**
- * 验证筛选参数是否有效
- * @param options 筛选选项
- * @returns 验证结果
+ * Validate filter parameters
+ * @param options Filter options
+ * @returns Validation result
  */
 export function validateFilterOptions(options: TrendingFilterOptions): { valid: boolean; errors: string[] } {
   const errors: string[] = [];
 
-  // 验证 since 参数
+  // Validate since parameter
   if (options.since !== undefined) {
     const validTimeRanges: TimeRange[] = ['daily', 'weekly', 'monthly'];
     if (!validTimeRanges.includes(options.since)) {
-      errors.push(`无效的 since 参数: ${options.since}，可选值: ${validTimeRanges.join(', ')}`);
+      errors.push(`Invalid since parameter: ${options.since}, valid values: ${validTimeRanges.join(', ')}`);
     }
   }
 
-  // 验证 language 参数（基本验证，非空字符串）
+  // Validate language parameter (basic validation, non-empty string)
   if (options.language !== undefined) {
     if (typeof options.language !== 'string' || options.language.trim() === '') {
-      errors.push('language 参数必须是非空字符串');
+      errors.push('language parameter must be a non-empty string');
     }
   }
 
-  // 验证 spokenLanguageCode 参数（基本验证，非空字符串）
+  // Validate spokenLanguageCode parameter (basic validation, non-empty string)
   if (options.spokenLanguageCode !== undefined) {
     if (typeof options.spokenLanguageCode !== 'string' || options.spokenLanguageCode.trim() === '') {
-      errors.push('spokenLanguageCode 参数必须是非空字符串');
+      errors.push('spokenLanguageCode parameter must be a non-empty string');
     }
   }
 

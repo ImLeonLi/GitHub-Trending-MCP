@@ -1,6 +1,6 @@
 /**
- * MCP Server 入口
- * 将 GitHub Trending 提取器封装为 MCP Server，供 AI 助手调用
+ * MCP Server entry point
+ * Wraps GitHub Trending extractor as MCP Server for AI assistant calls
  */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -20,69 +20,69 @@ import { TrendingFilterOptions, TimeRange } from './types';
 const TOOLS: Tool[] = [
   {
     name: 'getTrendingRepositories',
-    description: '获取 GitHub Trending 仓库列表。可以按时间范围、编程语言和开发者口语语言进行筛选。',
+    description: 'Get GitHub Trending repository list. Can filter by time range, programming language, and developer spoken language.',
     inputSchema: {
       type: 'object',
       properties: {
         since: {
           type: 'string',
           enum: ['daily', 'weekly', 'monthly'],
-          description: '时间范围：daily（今日）、weekly（本周）、monthly（本月）',
+          description: 'Time range: daily (today), weekly (this week), monthly (this month)',
           default: 'daily'
         },
         language: {
           type: 'string',
-          description: '编程语言筛选，例如：python, javascript, typescript, rust, go, java, c, c++, c#'
+          description: 'Programming language filter, e.g.: python, javascript, typescript, rust, go, java, c, c++, c#',
         },
         spokenLanguageCode: {
           type: 'string',
-          description: '开发者口语语言代码，例如：en（English）、zh（Chinese）、ja（Japanese）、fr（French）'
+          description: 'Developer spoken language code, e.g.: en (English), zh (Chinese), ja (Japanese), fr (French)'
         }
       }
     }
   },
   {
     name: 'getTrendingMetadata',
-    description: '获取 GitHub Trending 页面元数据，包括页面标题、描述和当前应用的筛选条件。',
+    description: 'Get GitHub Trending page metadata, including page title, description, and current applied filters.',
     inputSchema: {
       type: 'object',
       properties: {
         since: {
           type: 'string',
           enum: ['daily', 'weekly', 'monthly'],
-          description: '时间范围',
+          description: 'Time range',
           default: 'daily'
         },
         language: {
           type: 'string',
-          description: '编程语言筛选'
+          description: 'Programming language filter'
         },
         spokenLanguageCode: {
           type: 'string',
-          description: '开发者口语语言代码'
+          description: 'Developer spoken language code'
         }
       }
     }
   },
   {
     name: 'getTrendingStatistics',
-    description: '获取 GitHub Trending 统计信息，包括仓库总数、语言分布、总 stars 和 forks。',
+    description: 'Get GitHub Trending statistics, including total repositories, language distribution, total stars and forks.',
     inputSchema: {
       type: 'object',
       properties: {
         since: {
           type: 'string',
           enum: ['daily', 'weekly', 'monthly'],
-          description: '时间范围',
+          description: 'Time range',
           default: 'daily'
         },
         language: {
           type: 'string',
-          description: '编程语言筛选'
+          description: 'Programming language filter'
         },
         spokenLanguageCode: {
           type: 'string',
-          description: '开发者口语语言代码'
+          description: 'Developer spoken language code'
         }
       }
     }
@@ -96,7 +96,7 @@ function createServer(): Server {
   const server = new Server(
     {
       name: 'github-trending-server',
-      version: '1.0.0'
+      version: '0.2.0'
     },
     {
       capabilities: {
@@ -113,7 +113,7 @@ function createServer(): Server {
   });
 
   // 处理工具调用请求
-  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  server.setRequestHandler(CallToolRequestSchema, async (request: any) => {
     const { name, arguments: args } = request.params;
 
     try {
@@ -169,10 +169,10 @@ function createServer(): Server {
         }
 
         default:
-          throw new Error(`未知工具: ${name}`);
+          throw new Error(`Unknown tool: ${name}`);
       }
 
-      // 返回结果
+      // Return result
       const content: TextContent[] = [
         {
           type: 'text',
@@ -214,17 +214,17 @@ async function main() {
   const server = createServer();
   const transport = new StdioServerTransport();
 
-  console.error('GitHub Trending MCP Server 正在启动...');
-  console.error('可用工具:', TOOLS.map(t => t.name).join(', '));
+  console.error('GitHub Trending MCP Server starting...');
+  console.error('Available tools:', TOOLS.map(t => t.name).join(', '));
 
   await server.connect(transport);
 
-  console.error('GitHub Trending MCP Server 已连接');
+  console.error('GitHub Trending MCP Server connected');
 }
 
-// 启动服务器
+// Start server
 main().catch((error) => {
-  console.error('服务器启动失败:', error);
+  console.error('Server startup failed:', error);
   process.exit(1);
 });
 

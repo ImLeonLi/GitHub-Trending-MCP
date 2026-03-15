@@ -2,42 +2,42 @@
 chcp 65001 >nul
 echo.
 echo ╔════════════════════════════════════════════════════════╗
-echo ║     GitHub Trending 提取工具 - 启动器                  ║
+echo ║     GitHub Trending Extractor - Launcher               ║
 echo ╚════════════════════════════════════════════════════════╝
 echo.
 
-:: 检查 node_modules 是否存在
+:: Check if node_modules exists
 if not exist "node_modules" (
-    echo [INFO] 首次运行，正在安装依赖...
+    echo [INFO] First run, installing dependencies...
     call npm install
     if errorlevel 1 (
-        echo [ERROR] 依赖安装失败
+        echo [ERROR] Failed to install dependencies
         pause
         exit /b 1
     )
 )
 
-:: 检查是否已编译
+:: Check if compiled
 if not exist "dist\index.js" (
-    echo [INFO] 首次运行，正在编译项目...
+    echo [INFO] First run, building project...
     call npm run build
     if errorlevel 1 (
-        echo [ERROR] 编译失败
+        echo [ERROR] Build failed
         pause
         exit /b 1
     )
 )
 
-echo [INFO] 正在启动 Web 测试服务器...
-echo [INFO] 请稍候...
+echo [INFO] Starting Web test server...
+echo [INFO] Please wait...
 echo.
 
-:: 启动服务器
+:: Start server
 npm run server
 
-:: 如果服务器异常退出，暂停显示错误
+:: If server exits abnormally, pause to show error
 if errorlevel 1 (
     echo.
-    echo [ERROR] 服务器异常退出
+    echo [ERROR] Server exited abnormally
     pause
 )
