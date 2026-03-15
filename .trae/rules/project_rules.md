@@ -1,11 +1,6 @@
-# Project Rules
+# Git Commit Message Guidelines
 
-## Git Commit Message Guidelines
-
-When generating git commit messages, follow these conventions:
-
-### Commit Message Format
-
+## Format
 ```
 <type>: <subject>
 
@@ -14,56 +9,40 @@ When generating git commit messages, follow these conventions:
 <footer>
 ```
 
-### Types
+## Types
+- **feat**: New feature
+- **fix**: Bug fix
+- **docs**: Documentation changes
+- **style**: Code formatting changes
+- **refactor**: Code restructuring
+- **perf**: Performance improvement
+- **test**: Test changes
+- **chore**: Build/tooling changes
 
-- **feat**: A new feature
-- **fix**: A bug fix
-- **docs**: Documentation only changes
-- **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
-- **refactor**: A code change that neither fixes a bug nor adds a feature
-- **perf**: A code change that improves performance
-- **test**: Adding missing tests or correcting existing tests
-- **chore**: Changes to the build process or auxiliary tools and libraries such as documentation generation
+## Rules
+- Use imperative present tense: "change" not "changed"
+- No capitalization in subject
+- No period at end of subject
+- Keep subject under 50 characters
+- Body explains "why" and contrasts with previous behavior
+- Wrap body at 72 characters
 
-### Subject Rules
-
-- Use the imperative, present tense: "change" not "changed" nor "changes"
-- Don't capitalize the first letter
-- No dot (.) at the end
-- Keep it concise (less than 50 characters if possible)
-
-### Body Rules
-
-- Use the imperative, present tense
-- Include motivation for the change and contrast with previous behavior
-- Wrap at 72 characters
-
-### Examples
-
+## Examples
 ```
 feat: add user authentication
 
-Implement JWT-based authentication system with login and logout
-endpoints. Includes token refresh mechanism.
+Implement JWT-based auth with login/logout endpoints and token refresh.
 
 Closes #123
 ```
 
 ```
-fix: resolve memory leak in data parser
+fix: resolve memory leak in parser
 
-Fix memory leak caused by unclosed file handles when parsing
-large datasets. Now properly closes handles in finally block.
+Fix memory leak from unclosed file handles. Now properly closes handles in finally block.
 
 Fixes #456
 ```
 
-```
-docs: update API documentation
-
-Add examples for new endpoints and clarify parameter descriptions.
-```
-
-### Language
-
-All commit messages must be written in **English**.
+## Language
+All commit messages must be in **English**.
