@@ -113,7 +113,7 @@ function createServer(): Server {
   });
 
   // 处理工具调用请求
-  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  server.setRequestHandler(CallToolRequestSchema, async (request: any) => {
     const { name, arguments: args } = request.params;
 
     try {
