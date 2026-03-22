@@ -31,12 +31,17 @@ jobs:
         run: |
           # 创建一个临时目录，存放要发布的文件
           mkdir release_package
-          # 复制编译产物（通常 tsc 输出到 dist/ 目录）
+          # 复制编译产物（tsc 输出到 dist/ 目录）
           cp -r dist release_package/
-          # 复制 package.json 和必要的配置文件
-          cp package.json README.md release_package/ || true
-          # 如果项目需要运行时依赖，可以将 node_modules 也复制进去（可选）
-          cp -r node_modules release_package/   # 这会很大，不推荐
+          # 复制静态资源和技能文件
+          cp -r public release_package/ || true
+          cp -r skill release_package/ || true
+          # 复制启动脚本
+          cp start-server.bat start-server.sh release_package/ || true
+          # 复制配置和文档文件
+          cp package.json README.md README_CN.md LICENSE release_package/ || true
+          # 复制运行时依赖（包含 node_modules）
+          cp -r node_modules release_package/
           # 打包成 zip 文件
           cd release_package
           zip -r ../github-trending-mcp-${{ github.ref_name }}.zip .
