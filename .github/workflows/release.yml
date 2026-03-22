@@ -36,15 +36,15 @@ jobs:
           # 复制 package.json 和必要的配置文件
           cp package.json README.md release_package/ || true
           # 如果项目需要运行时依赖，可以将 node_modules 也复制进去（可选）
-          # cp -r node_modules release_package/   # 这会很大，不推荐
+          cp -r node_modules release_package/   # 这会很大，不推荐
           # 打包成 zip 文件
           cd release_package
-          zip -r ../myapp-${{ github.ref_name }}.zip .
+          zip -r ../github-trending-mcp-${{ github.ref_name }}.zip .
           cd ..
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v1
         with:
-          files: myapp-*.zip        # 匹配上面生成的 zip 文件
+          files: github-trending-mcp-*.zip # 匹配上面生成的 zip 文件
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

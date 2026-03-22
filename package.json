@@ -1,5 +1,5 @@
 {
-  "name": "github-trending-extractor",
+  "name": "github-trending-mcp",
   "version": "0.2.0",
   "description": "GitHub Trending 页面内容提取工具，支持 MCP Server 和 WorkBuddy Skill",
   "main": "dist/index.js",
