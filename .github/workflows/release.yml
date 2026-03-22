@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'           # 推送 v1.0.0, v2.1.0 等 tag 时触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # 允许上传 Release 文件
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'      # 与你项目匹配的 Node 版本
+          cache: 'npm'            # 缓存依赖，加速构建
+
+      - name: Install dependencies
+        run: npm ci               # 使用 ci 保证可重现安装
+
+      - name: Compile TypeScript
+        run: npm run build        # 假设 package.json 中定义了 "build": "tsc"
+
+      - name: Package files
+        run: |
+          # 创建一个临时目录，存放要发布的文件
+          mkdir release_package
+          # 复制编译产物（通常 tsc 输出到 dist/ 目录）
+          cp -r dist release_package/
+          # 复制 package.json 和必要的配置文件
+          cp package.json README.md release_package/ || true
+          # 如果项目需要运行时依赖，可以将 node_modules 也复制进去（可选）
+          # cp -r node_modules release_package/   # 这会很大，不推荐
+          # 打包成 zip 文件
+          cd release_package
+          zip -r ../myapp-${{ github.ref_name }}.zip .
+          cd ..
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: myapp-*.zip        # 匹配上面生成的 zip 文件
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
