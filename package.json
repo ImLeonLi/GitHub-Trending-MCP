@@ -1,9 +1,12 @@
 {
-  "name": "github-trending-mcp",
+  "name": "@imleonli/github-trending-mcp",
+  "mcpName": "io.github.ImLeonLi/github-trending-mcp",
   "version": "0.2.1",
   "description": "GitHub Trending 页面内容提取工具，支持 MCP Server 和 WorkBuddy Skill",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "author": "Leon Li",
+  "license": "Apache-2.0",
   "scripts": {
     "build": "tsc",
     "dev": "ts-node src/index.ts",
@@ -20,8 +23,10 @@
     "skill",
     "scraper"
   ],
-  "author": "",
-  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ImLeonLi/GitHub-Trending-MCP.git"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
     "axios": "^1.7.9",

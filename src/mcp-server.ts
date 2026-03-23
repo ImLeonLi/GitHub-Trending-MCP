@@ -95,7 +95,7 @@ const TOOLS: Tool[] = [
 function createServer(): Server {
   const server = new Server(
     {
-      name: 'github-trending-server',
+      name: 'github-trending-mcp-server',
       version: '0.2.0'
     },
     {

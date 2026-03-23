@@ -64,8 +64,8 @@ npm run mcp-server
 
 ```bash
 # Clone the repository
-git clone <repository-url>
-cd github-trending
+git clone https://github.com/ImLeonLi/GitHub-Trending-MCP.git
+cd GitHub-Trending-MCP
 
 # Install dependencies
 npm install
